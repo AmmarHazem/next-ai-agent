@@ -19,7 +19,7 @@ export default function Home() {
           <SignedIn>
             <Link href={"/dashboard"}>
               <Button>
-                Sign Out
+                Dashboard
                 <ArrowRight />
               </Button>
             </Link>
