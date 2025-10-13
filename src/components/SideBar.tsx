@@ -1,18 +1,42 @@
 "use client";
 import { useNavigationProvider } from "@/context/NavigationProvider";
-import { FC } from "react";
-import { DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "./ui/drawer";
+import { FC, useCallback, useMemo } from "react";
+import { DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
+import { createChat, listChats } from "../../convex/chat";
+import { useRouter } from "next/navigation";
+import ChatRow from "./ChatRow";
 
 const SideBar: FC = () => {
-  const { closeMobileNav, isMobileNavOpen } = useNavigationProvider();
+  const { closeMobileNav } = useNavigationProvider();
+  const router = useRouter();
+
+  const addNewChat = useCallback(async () => {
+    const chatId = createChat({ title: "New Chat" });
+    router.push(`/dashboard/chat/${chatId}`);
+    closeMobileNav();
+  }, [closeMobileNav, router]);
+
+  const chats = useMemo(() => {
+    return listChats();
+  }, []);
 
   return (
     <>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle className="w-full">
+            <Button className="w-full" onClick={addNewChat}>
+              New Chat <Plus />
+            </Button>
+          </DrawerTitle>
         </DrawerHeader>
+        <div className="flex flex-col px-4 py-4 gap-4">
+          {chats.map((chat) => {
+            return <ChatRow key={chat.id} chat={chat} />;
+          })}
+        </div>
       </DrawerContent>
     </>
   );
