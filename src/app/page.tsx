@@ -17,7 +17,7 @@ export default function Home() {
         </header>
         <div className="flex justify-center mt-4">
           <SignedIn>
-            <Link href={"/dashboard"}>
+            <Link href={"/dashboard"} className="cursor-pointer">
               <Button>
                 Dashboard
                 <ArrowRight />

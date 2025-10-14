@@ -22,16 +22,32 @@
 export interface ChatModel {
   title: string;
   id: string;
+  messages: MessageModel[];
+}
+
+export interface MessageModel {
+  chatId: string;
+  text: string;
+  id: string;
 }
 
 let chats: ChatModel[] = [
-  { id: "1", title: "Test" },
-  { id: "2", title: "Chatting" },
+  {
+    id: "1",
+    title: "Test",
+    messages: [
+      { chatId: "1", text: "Hello", id: "1" },
+      { chatId: "1", text: "Hi there", id: "2" },
+      { chatId: "1", text: "How are you ?", id: "3" },
+      { chatId: "1", text: "I'm fine thank you", id: "4" },
+    ],
+  },
+  { id: "2", title: "Chatting", messages: [] },
 ];
 
 export const createChat = ({ title }: { title: string }) => {
   const id = new Date().valueOf().toString();
-  chats.push({ title, id });
+  chats.push({ title, id, messages: [] });
   return id;
 };
 
@@ -41,4 +57,8 @@ export const deleteChat = ({ chatId }: { chatId: string }) => {
 
 export const listChats = () => {
   return chats;
+};
+
+export const getMessages = ({ chatId }: { chatId: string }) => {
+  return chats.find((chat) => chat.id === chatId)?.messages;
 };
