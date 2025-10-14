@@ -21,7 +21,9 @@ const NavigationProvider: FC<PropsWithChildren> = ({ children }) => {
       value={{
         isMobileNavOpen,
         setIsMobileNavOpen,
-        closeMobileNav() {},
+        closeMobileNav() {
+          setIsMobileNavOpen(false);
+        },
       }}
     >
       {children}

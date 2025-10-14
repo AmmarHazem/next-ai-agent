@@ -1,3 +1,7 @@
 export default function DashboardPage() {
-  return <h1>dashboard</h1>;
+  return (
+    <div className="h-screen flex justify-center items-center">
+      <h1 className="text-2xl">Welcome to the AI agent chat</h1>
+    </div>
+  );
 }
