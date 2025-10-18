@@ -14,7 +14,7 @@ const SideBar: FC = () => {
 
   const addNewChat = useCallback(async () => {
     const chatId = createChat({ title: "New Chat" });
-    router.push(`/dashboard/chat/${chatId}`);
+    router.push(`/dashboard/chats/${chatId}`);
     closeMobileNav();
   }, [closeMobileNav, router]);
 

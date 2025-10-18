@@ -29,6 +29,8 @@ export interface MessageModel {
   chatId: string;
   text: string;
   id: string;
+  userId: string;
+  createdAt: number;
 }
 
 let chats: ChatModel[] = [
@@ -36,10 +38,10 @@ let chats: ChatModel[] = [
     id: "1",
     title: "Test",
     messages: [
-      { chatId: "1", text: "Hello", id: "1" },
-      { chatId: "1", text: "Hi there", id: "2" },
-      { chatId: "1", text: "How are you ?", id: "3" },
-      { chatId: "1", text: "I'm fine thank you", id: "4" },
+      { chatId: "1", text: "Hello", id: "1", userId: "1", createdAt: Date.now() },
+      { chatId: "1", text: "Hi there", id: "2", userId: "2", createdAt: Date.now() },
+      { chatId: "1", text: "How are you ?", id: "3", userId: "1", createdAt: Date.now() },
+      { chatId: "1", text: "I'm fine thank you", id: "4", userId: "2", createdAt: Date.now() },
     ],
   },
   { id: "2", title: "Chatting", messages: [] },
@@ -61,4 +63,31 @@ export const listChats = () => {
 
 export const getMessages = ({ chatId }: { chatId: string }) => {
   return chats.find((chat) => chat.id === chatId)?.messages;
+};
+
+export const sendMessage = ({ userId, chatId, content }: { chatId: string; content: string; userId: string }) => {
+  const message: MessageModel = {
+    id: new Date().toISOString(),
+    text: content,
+    chatId: chatId,
+    userId: userId,
+    createdAt: Date.now(),
+  };
+  const chat = chats.find((item) => item.id === chatId);
+  if (!chat) {
+    chats.push({
+      id: new Date().toISOString(),
+      messages: [message],
+      title: "New chat",
+    });
+  } else {
+    chat.messages.push(message);
+  }
+  return message;
+};
+
+export const getLastMessage = ({ chatId }: { chatId: string }) => {
+  const chat = chats.find((item) => item.id === chatId);
+  if (!chat) return null;
+  return chat.messages[chat.messages.length - 1];
 };
