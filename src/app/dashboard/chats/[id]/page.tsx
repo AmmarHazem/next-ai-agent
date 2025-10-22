@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getMessages } from "../../../../../convex/chat";
+import ChatInterface from "@/components/ChatInterface";
 
 export default async function ChatPage(props: { params: Promise<{ id: string }> }) {
   const chatId = (await props.params).id;
@@ -13,5 +14,9 @@ export default async function ChatPage(props: { params: Promise<{ id: string }> 
 
   const messages = getMessages({ chatId: chatId });
 
-  return <div>Chat Page {chatId}</div>;
+  return (
+    <div className="flex-1 overflow-hidden">
+      <ChatInterface chatId={chatId} initialMessages={messages ?? []} />
+    </div>
+  );
 }
