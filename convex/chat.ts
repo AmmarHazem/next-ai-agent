@@ -31,6 +31,7 @@ export interface MessageModel {
   id: string;
   userId: string;
   createdAt: number;
+  role: "user" | "assistant";
 }
 
 let chats: ChatModel[] = [
@@ -38,10 +39,10 @@ let chats: ChatModel[] = [
     id: "1",
     title: "Test",
     messages: [
-      { chatId: "1", text: "Hello", id: "1", userId: "1", createdAt: Date.now() },
-      { chatId: "1", text: "Hi there", id: "2", userId: "2", createdAt: Date.now() },
-      { chatId: "1", text: "How are you ?", id: "3", userId: "1", createdAt: Date.now() },
-      { chatId: "1", text: "I'm fine thank you", id: "4", userId: "2", createdAt: Date.now() },
+      { chatId: "1", text: "Hello", id: "1", userId: "1", createdAt: Date.now(), role: "user" },
+      { chatId: "1", text: "Hi there", id: "2", userId: "2", createdAt: Date.now(), role: "assistant" },
+      { chatId: "1", text: "How are you ?", id: "3", userId: "1", createdAt: Date.now(), role: "user" },
+      { chatId: "1", text: "I'm fine thank you", id: "4", userId: "2", createdAt: Date.now(), role: "assistant" },
     ],
   },
   { id: "2", title: "Chatting", messages: [] },
@@ -72,6 +73,7 @@ export const sendMessage = ({ userId, chatId, content }: { chatId: string; conte
     chatId: chatId,
     userId: userId,
     createdAt: Date.now(),
+    role: "user",
   };
   const chat = chats.find((item) => item.id === chatId);
   if (!chat) {
