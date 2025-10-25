@@ -23,38 +23,47 @@ const ChatInterface: FC<ChatInterfaceProps> = ({ chatId, initialMessages }) => {
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
-      e.preventDefault();
-      const inputValue = input.trim();
-      setInput("");
-      setStreamResponse("");
-      setCurrentTool(null);
-      setLoading(true);
-      const newMessage: MessageModel = {
-        chatId: chatId,
-        createdAt: new Date().valueOf(),
-        id: new Date().toISOString(),
-        text: inputValue,
-        userId: user?.id ?? "",
-        role: "user",
-      };
-      setMessages((val) => [...val, newMessage]);
-      const payload: ChatRequestBody = {
-        chatId: chatId,
-        newMessage: newMessage.text,
-        messages: messages.map((item) => {
-          return { content: item.text, role: item.role };
-        }),
-      };
-      const response = await fetch("/api/chat/stream", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        throw new Error("error");
-      }
-      if (!response.body) {
-        throw new Error("error");
+      const newMessageId = new Date().toISOString();
+      try {
+        e.preventDefault();
+        const inputValue = input.trim();
+        setInput("");
+        setStreamResponse("");
+        setCurrentTool(null);
+        setLoading(true);
+        const newMessage: MessageModel = {
+          chatId: chatId,
+          createdAt: new Date().valueOf(),
+          id: newMessageId,
+          text: inputValue,
+          userId: user?.id ?? "",
+          role: "user",
+        };
+        setMessages((val) => [...val, newMessage]);
+        const payload: ChatRequestBody = {
+          chatId: chatId,
+          newMessage: newMessage.text,
+          messages: messages.map((item) => {
+            return { content: item.text, role: item.role };
+          }),
+        };
+        const response = await fetch("/api/chat/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+          throw new Error("error");
+        }
+        if (!response.body) {
+          throw new Error("error");
+        }
+      } catch (e) {
+        console.log("--- send message error ", e);
+        setMessages((value) => value.filter((item) => item.id !== newMessageId));
+        setStreamResponse("error");
+      } finally {
+        setLoading(false);
       }
     },
     [chatId, input, messages, user?.id]
